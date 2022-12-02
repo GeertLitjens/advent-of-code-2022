@@ -1,37 +1,50 @@
 import tempfile
 
 import nox
-from nox_poetry import session
+from nox_poetry import Session, session
 
-nox.options.sessions = "lint", "safety", "tests"
+nox.options.sessions = "lint", "mypy", "safety", "tests"
 locations = "src", "tests", "noxfile.py"
+package = "advent_of_code_2022"
 
 
 @session(python=["3.10", "3.8"])
-def tests(session):
+def tests(session: Session) -> None:
     session.install("pytest", "coverage[toml]", "pytest-cov", ".")
     session.run("pytest", "--cov")
 
 
 @session(python=["3.10", "3.8"])
-def lint(session):
+def lint(session: Session) -> None:
     args = session.posargs or locations
     session.install(
-        "flake8", "flake8-bandit", "flake8-black", "flake8-bugbear", "flake8-isort"
+        "flake8",
+        "flake8-annotations",
+        "flake8-bandit",
+        "flake8-black",
+        "flake8-bugbear",
+        "flake8-isort",
     )
     session.run("flake8", *args)
 
 
 @session(python="3.10")
-def black(session):
+def black(session: Session) -> None:
     args = session.posargs or locations
     args += ("--extend-exclude", "day_template")
     session.install("black")
     session.run("black", *args)
 
 
+@session(python=["3.10", "3.8"])
+def mypy(session: Session) -> None:
+    args = session.posargs or locations
+    session.install("mypy")
+    session.run("mypy", *args)
+
+
 @nox.session(python="3.8")
-def safety(session):
+def safety(session: Session) -> None:
     with tempfile.NamedTemporaryFile() as requirements:
         session.run(
             "poetry",
@@ -44,3 +57,10 @@ def safety(session):
         )
         session.install("safety")
         session.run("safety", "check", f"--file={requirements.name}", "--full-report")
+
+
+@session(python=["3.10", "3.8"])
+def typeguard(session: Session) -> None:
+    args = session.posargs or ["-m", "not e2e"]
+    session.install("pytest", "pytest-mock", "typeguard", ".")
+    session.run("pytest", f"--typeguard-packages={package}", *args)

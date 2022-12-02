@@ -2,6 +2,7 @@ import importlib
 import logging
 import os
 import shutil
+import typing
 from pathlib import Path
 
 import click
@@ -14,7 +15,7 @@ from .utils import ColorLogger
 @click.option("--debug/--no-debug", help="Provide more debug logging", default=False)
 @click.version_option(version=__version__)
 @click.pass_context
-def cli(ctx, debug):
+def cli(ctx: click.Context, debug: bool) -> None:
     """
     Solution of the Advent of Code 2022 as implemented by Geert Litjens in Python
     """
@@ -52,14 +53,16 @@ def cli(ctx, debug):
 )
 @click.option(
     "-b",
-    "--blog",
+    "--blog/--no-blog",
     required=False,
     type=click.BOOL,
     default=False,
     help="Generate the blog page for the specified days.",
 )
 @click.pass_obj
-def run(logger, days, token, submit, blog):
+def run(
+    logger: logging.Logger, days: str, token: str, submit: bool, blog: bool
+) -> None:
     """
     Run a specific set of days, default is all days. If you want to run
     a specific part of a day, specify an a or a b after the day number
@@ -112,7 +115,7 @@ def run(logger, days, token, submit, blog):
     default=False,
 )
 @click.pass_obj
-def create(logger, days, overwrite):
+def create(logger: logging.Logger, days: typing.List[int], overwrite: bool) -> None:
     """Create template folder for different days."""
     for day in days:
         logger.info(f"Creating structure for day {day}")

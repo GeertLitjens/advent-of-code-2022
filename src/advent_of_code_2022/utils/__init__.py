@@ -5,13 +5,14 @@ import sys
 import time
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any, Tuple
+from typing import List, Tuple, TypeVar
 
 import requests
 from colorama import Back, Fore, init
 
 init(autoreset=True)
 logging.addLevelName(25, "SUCCESS")
+AoCData = TypeVar("AoCData")
 
 
 class ColorFormatter(logging.Formatter):
@@ -25,7 +26,7 @@ class ColorFormatter(logging.Formatter):
         "CRITICAL": Fore.RED + Back.WHITE,
     }
 
-    def format(self, record) -> str:
+    def format(self: "ColorFormatter", record: logging.LogRecord) -> str:
         color = self.COLORS.get(record.levelname, "")
         if color:
             record.name = color + record.name
@@ -35,7 +36,7 @@ class ColorFormatter(logging.Formatter):
 
 
 class ColorLogger(logging.Logger):
-    def __init__(self, name):
+    def __init__(self: "ColorFormatter", name: str) -> None:
         logging.Logger.__init__(self, name)
         color_formatter = ColorFormatter("%(message)s")
         console = logging.StreamHandler()
@@ -44,7 +45,7 @@ class ColorLogger(logging.Logger):
 
 
 class Solution(ABC):
-    def __init__(self, day: int = 1, year: int = 2022) -> None:
+    def __init__(self: "Solution", day: int = 1, year: int = 2022) -> None:
         init()
         self._data_dir = Path.home() / ".aoc" / str(year)
         if not self._data_dir.exists():
@@ -60,7 +61,7 @@ class Solution(ABC):
         self._session_token = {"session": os.environ["AOC_TOKEN"]}
         self._logger = logging.getLogger("aoclogger")
 
-    def _get_input_data(self) -> str:
+    def _get_input_data(self: "Solution") -> str:
         if not self._input_data_path.exists():
             input_url = f"https://adventofcode.com/{self._year}/day/{self._day}/input"
             response = requests.get(
@@ -74,18 +75,20 @@ class Solution(ABC):
         return self._input_data_path.read_text()
 
     @abstractmethod
-    def _parse_data(self, input_data: str) -> Any:
+    def _parse_data(self: "Solution", input_data: str) -> AoCData:
         return input_data
 
     @abstractmethod
-    def _solve_part1(self, parsed_data: Any) -> Any:
+    def _solve_part1(self: "Solution", parsed_data: AoCData) -> AoCData:
         return parsed_data
 
     @abstractmethod
-    def _solve_part2(self, parsed_data: Any) -> Any:
+    def _solve_part2(self: "Solution", parsed_data: AoCData) -> AoCData:
         return parsed_data
 
-    def solve(self, part1: bool = True, part2: bool = True) -> Tuple[Any, Any]:
+    def solve(
+        self: "Solution", part1: bool = True, part2: bool = True
+    ) -> Tuple[AoCData, AoCData]:
         self._logger.info(f"Solving for day {self._day}")
         parse_start = time.time()
         parsed_data = self._parse_data(self._get_input_data())
@@ -106,7 +109,7 @@ class Solution(ABC):
             self._logger.info(f"\tTime needed for part 2: {part2_end - part2_start}s")
         return self._solution_part1, self._solution_part2
 
-    def submit(self) -> None:
+    def submit(self: "Solution") -> None:
         answer_url = f"https://adventofcode.com/{self._year}/day/{self._day}/answer"
         if self._solution_part1:
             if self._answers1_path.exists():
@@ -155,7 +158,7 @@ class Solution(ABC):
                     "Answer for part 2 already given, not submitting again!"
                 )
 
-    def _check_answer(self, response_text: str) -> None:
+    def _check_answer(self: "Solution", response_text: str) -> None:
         if "That's the right answer" in response_text:
             self._logger.log(25, "\tYou answered correctly!")
         elif "Did you already complete it" in response_text:
@@ -163,35 +166,41 @@ class Solution(ABC):
         else:
             self._logger.warning("\tYou gave the wrong answer!")
 
-    def generate_day_md(self) -> None:
-        template_path = Path(__file__).parent / "../../utils/template.md"
+    def generate_day_md(self: "Solution") -> None:
+        template_path = Path(__file__).parent / "template.md"
         with open(template_path, "r") as file:
             template = file.read()
         day_readme_path = (
-            Path(__file__).parent / f"../../day{str(self._day).zfill(2)}/README.md"
+            Path(__file__).parent / f"../days/day{str(self._day).zfill(2)}/README.md"
         )
         with open(day_readme_path, "r") as file:
             day_text = file.readlines()
         page_description = day_text[0].replace("## ", "")
-        day_text = "".join(["> " + line for line in day_text[2:]])
+        day_text_string = "".join(["> " + line for line in day_text[2:]])
         page_title = f"Day {self._day}"
-        aoc_parse_solution = " ".join(
-            [x.lstrip() for x in self._parse_data.__doc__.split("\n")]
-        )
-        aoc_part1_solution = " ".join(
-            [x.lstrip() for x in self._solve_part1.__doc__.split("\n")]
-        )
-        aoc_part2_solution = " ".join(
-            [x.lstrip() for x in self._solve_part2.__doc__.split("\n")]
-        )
+        if self._parse_data.__doc__:
+            aoc_parse_solution = " ".join(
+                [x.lstrip() for x in self._parse_data.__doc__.split("\n")]
+            )
+        if self._solve_part1.__doc__:
+            aoc_part1_solution = " ".join(
+                [x.lstrip() for x in self._solve_part1.__doc__.split("\n")]
+            )
+        if self._solve_part2.__doc__:
+            aoc_part2_solution = " ".join(
+                [x.lstrip() for x in self._solve_part2.__doc__.split("\n")]
+            )
         day_experience = sys.modules[self.__module__].__doc__
-        aoc_part1_text, aoc_part2_text = day_text.split("> ### Part 2")
-        aoc_parse_code = inspect.getsourcelines(self._parse_data)[0]
-        aoc_parse_code = self._clean_code_for_md(aoc_parse_code)
-        aoc_part1_code = inspect.getsourcelines(self._solve_part1)[0]
-        aoc_part1_code = self._clean_code_for_md(aoc_part1_code)
-        aoc_part2_code = inspect.getsourcelines(self._solve_part2)[0]
-        aoc_part2_code = self._clean_code_for_md(aoc_part2_code)
+        aoc_part1_text, aoc_part2_text = day_text_string.split("> ### Part 2")
+        aoc_parse_code = self._clean_code_for_md(
+            inspect.getsourcelines(self._parse_data)[0]
+        )
+        aoc_part1_code = self._clean_code_for_md(
+            inspect.getsourcelines(self._solve_part1)[0]
+        )
+        aoc_part2_code = self._clean_code_for_md(
+            inspect.getsourcelines(self._solve_part2)[0]
+        )
         replace_dict = {
             "<page_title>": page_title,
             "<page_description>": page_description,
@@ -206,13 +215,14 @@ class Solution(ABC):
             "<aoc_part2_code>": aoc_part2_code,
         }
         for key, value in replace_dict.items():
-            template = template.replace(key, value)
-        out_path = Path(__file__).parent / f"../docs/days/day{self._day}.md"
+            if isinstance(value, str):
+                template = template.replace(key, value)
+        out_path = Path(__file__).parent / f"../../../docs/days/day{self._day}.md"
         with open(out_path, "w") as file:
             file.write(template)
 
     @staticmethod
-    def _clean_code_for_md(snippet: list[str]) -> str:
+    def _clean_code_for_md(snippet: List[str]) -> str:
         leading_whitespace = len(snippet[0]) - len(snippet[0].lstrip(" "))
         snippet = [line[leading_whitespace:] for line in snippet]
         first_line_comment = 0
