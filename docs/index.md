@@ -20,3 +20,4 @@ Here you can find my solutions (on [GitHub](https://github.com/GeertLitjens/adve
 for the different days:
 
 * [Day 1](./days/day1.md)
+* [Day 2](./days/day2.md)
