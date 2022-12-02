@@ -1,7 +1,7 @@
 """
 """
 
-from utils import Solution
+from advent_of_code_2022.utils import Solution
 from typing import Any
 import numpy as np
 
