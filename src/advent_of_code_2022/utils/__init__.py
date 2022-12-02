@@ -7,9 +7,8 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any, Tuple
 
-from colorama import Back, Fore, init
-
 import requests
+from colorama import Back, Fore, init
 
 init(autoreset=True)
 logging.addLevelName(25, "SUCCESS")

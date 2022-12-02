@@ -1,9 +1,10 @@
-import click
 import importlib
 import logging
 import os
-from pathlib import Path
 import shutil
+from pathlib import Path
+
+import click
 
 from . import __version__
 from .utils import ColorLogger
@@ -142,5 +143,5 @@ def create(logger, days, overwrite):
             )
             os.remove(out_test_path)
             logger.log(25, "Successfully created folder and tests.")
-        except:
+        except OSError:
             logger.error(f"Failed to create the folder for day {day}.")

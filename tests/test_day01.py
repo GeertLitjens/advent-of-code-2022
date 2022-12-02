@@ -1,4 +1,5 @@
 import pytest
+
 from advent_of_code_2022.days.day01.solution import DaySolution
 
 
@@ -20,6 +21,7 @@ def day_testdata():
 
 10000\
 """
+
 
 def test_part1(day_testdata):
     sol = DaySolution()

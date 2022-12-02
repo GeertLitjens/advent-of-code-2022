@@ -1,10 +1,12 @@
 """
-Pretty straightforward first day, with essentially mainly data parsing and summing / maxing
+Pretty straightforward first day, with essentially mainly data parsing and
+summing / maxing
 """
+from typing import Any
+
+import numpy as np
 
 from advent_of_code_2022.utils import Solution
-from typing import Any
-import numpy as np
 
 
 class DaySolution(Solution):

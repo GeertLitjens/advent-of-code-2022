@@ -1,4 +1,5 @@
 import pytest
+
 from advent_of_code_2022.days.day02.solution import DaySolution
 
 
