@@ -1,4 +1,4 @@
-theme: jekyll-theme-cayman
+theme: jekyll-theme-midnight
 title: "Geert's Advent of Code 2022 solutions in Python"
 description: "Trying to solve the Advent of Code puzzles and simultanousnly learn some modern Python techniques and toolchains."
 show_downloads: false
