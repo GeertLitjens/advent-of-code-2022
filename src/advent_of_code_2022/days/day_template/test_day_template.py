@@ -15,7 +15,7 @@ def test_part1(day_testdata: str) -> None:
     assert result == <TEST_ANSWER_1>
 
 
-def test_part2(day_testdata: str) -> None):
+def test_part2(day_testdata: str) -> None:
     sol = DaySolution()
     parsed_data = sol._parse_data(day_testdata)
     result = sol._solve_part2(parsed_data)
