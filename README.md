@@ -10,4 +10,5 @@ This is the second year that I decided to participate in the [Advent of Code](ht
 | [Day 1](http://geertlitjens.nl/advent-of-code-2021/days/day1.html) | ⭐ | ⭐ |
 | [Day 2](http://geertlitjens.nl/advent-of-code-2021/days/day2.html) | ⭐ | ⭐ |
 | [Day 3](http://geertlitjens.nl/advent-of-code-2021/days/day3.html) | ⭐ | ⭐ |
+| [Day 4](http://geertlitjens.nl/advent-of-code-2021/days/day4.html) | ⭐ | ⭐ |
 <!--- advent_readme_stars table --->
