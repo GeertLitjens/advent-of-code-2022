@@ -16,9 +16,9 @@ before you can access the second part. Completing the different parts successful
 hints, except Googling for others' solutions.
 
 ## Solutions
-Here you can find my solutions (on [GitHub](https://github.com/GeertLitjens/advent-of-code-2022) as well)
-for the different days:
+Here you can find my solutions (on [GitHub](https://github.com/GeertLitjens/advent-of-code-2022) as well) for the different days:
 
 * [Day 1](./days/day1.md)
 * [Day 2](./days/day2.md)
 * [Day 3](./days/day3.md)
+* [Day 4](./days/day4.md)

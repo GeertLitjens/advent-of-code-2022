@@ -221,6 +221,20 @@ class Solution(ABC):
         with open(out_path, "w") as file:
             file.write(template)
 
+        # Then adept the ToC
+        toc_path = Path(__file__).parent / "../../../docs/index.md"
+        toc_text, *rest = toc_path.read_text().split("## Solutions")
+        toc_text += (
+            "## Solutions\nHere you can find my solutions "
+            "(on [GitHub](https://github.com/GeertLitjens/advent-of-code-2022) as well) "
+            "for the different days:\n\n"
+        )
+        for day_md in range(
+            len(os.listdir(Path(__file__).parent / "../../../docs/days"))
+        ):
+            toc_text += f"* [Day {day_md + 1}](./days/day{day_md + 1}.md)\n"
+        toc_path.write_text(toc_text)
+
     @staticmethod
     def _clean_code_for_md(snippet: List[str]) -> str:
         leading_whitespace = len(snippet[0]) - len(snippet[0].lstrip(" "))
