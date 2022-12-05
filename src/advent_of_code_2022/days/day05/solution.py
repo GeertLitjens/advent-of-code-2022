@@ -1,4 +1,8 @@
 """
+The difficulty is slowly ramping up, although in this exercise it was mainly
+the parsing that was a bit more challenging. Parts 1 and 2 were simply following
+the instructions. Although I could imaging that this can be solved in a different
+way with less code.
 """
 
 from advent_of_code_2022.utils import AoCData, Solution
@@ -9,7 +13,13 @@ class DaySolution(Solution):
         super().__init__(day, year)
 
     def _parse_data(self: "DaySolution", input_data: str) -> AoCData:
-        """ """
+        """
+        First split the starting position from the instructions. Then
+        parse the starting positions bottom to top to determine the
+        number of stacks and then the crates per stack in the correct
+        order. The instructions are always the same, so simply parsing
+        the string and storing the relevant ints.
+        """
         start_pos, instructions_string = input_data.split("\n\n")
         stacks_strings = start_pos.splitlines()
         nr_stacks = int(stacks_strings[-1][-2:])
@@ -29,7 +39,11 @@ class DaySolution(Solution):
         return stacks, instructions
 
     def _solve_part1(self: "DaySolution", parsed_data: AoCData) -> AoCData:
-        """ """
+        """
+        Pretty straightforwar, loop over the instructions then do x times
+        a pop of stack y and add it to stack z. Then read the top crates
+        from all stacks that are not empty.
+        """
         stacks, instructions = parsed_data
         for instruction in instructions:
             for _ in range(instruction[0]):
@@ -39,7 +53,10 @@ class DaySolution(Solution):
         return top_crates
 
     def _solve_part2(self: "DaySolution", parsed_data: AoCData) -> AoCData:
-        """ """
+        """
+        Very similar, but store the popped crates in a list and add that list
+        in its entirety to keep the order of the popped crates.
+        """
         stacks, instructions = parsed_data
         for instruction in instructions:
             crates = []
