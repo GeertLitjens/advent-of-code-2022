@@ -23,3 +23,4 @@ Here you can find my solutions (on [GitHub](https://github.com/GeertLitjens/adve
 * [Day 3](./days/day3.md)
 * [Day 4](./days/day4.md)
 * [Day 5](./days/day5.md)
+* [Day 6](./days/day6.md)
