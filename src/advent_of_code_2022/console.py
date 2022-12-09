@@ -2,6 +2,7 @@ import importlib
 import logging
 import os
 import shutil
+import sys
 import typing
 from pathlib import Path
 
@@ -148,3 +149,7 @@ def create(logger: logging.Logger, days: typing.List[int], overwrite: bool) -> N
             logger.log(25, "Successfully created folder and tests.")
         except OSError:
             logger.error(f"Failed to create the folder for day {day}.")
+
+
+if __name__ == "__main__":
+    cli(sys.argv[1:])
