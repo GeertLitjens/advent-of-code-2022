@@ -30,4 +30,4 @@ def test_part2(day_testdata: str) -> None:
     sol = DaySolution()
     parsed_data = sol._parse_data(day_testdata)
     result = sol._solve_part2(parsed_data)
-    assert result == 1651
+    assert result == 1707

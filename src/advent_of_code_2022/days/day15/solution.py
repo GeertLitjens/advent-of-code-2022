@@ -69,7 +69,7 @@ class DaySolution(Solution):
 
     def _get_space_coords(
         self: "DaySolution", boxes: list[list[list[list[int]]]]
-    ) -> tuple(set[int], set[int]):
+    ) -> tuple[set[int], set[int]]:
         # First find all columns that are exactly between two boxes
         xs = set()
         for box1, box2 in itertools.combinations(boxes, 2):

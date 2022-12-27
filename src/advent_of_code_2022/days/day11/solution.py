@@ -1,6 +1,6 @@
 """
 """
-import ast
+
 from dataclasses import dataclass
 from math import prod
 
@@ -31,7 +31,12 @@ class Monkey:
             self.items_inspected += 1
 
     def _apply_operation(self: "Monkey", old: int) -> int:
-        return int(ast.literal_eval(self.operation))
+        if self.operation == "old * old":
+            return old * old
+        elif "*" in self.operation:
+            return old * int(self.operation.split(" ")[-1])
+        else:
+            return old + int(self.operation.split(" ")[-1])
 
 
 class DaySolution(Solution):
